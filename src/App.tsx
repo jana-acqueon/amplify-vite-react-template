@@ -1,47 +1,23 @@
-import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
 import { useAuthenticator } from '@aws-amplify/ui-react';
-
-const client = generateClient<Schema>();
+import { StorageBrowser } from '@aws-amplify/ui-react-storage';
+// import '@aws-amplify/ui-react/styles.css';
 
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
   const { signOut } = useAuthenticator();
 
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
-
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id })
-  }
-
   return (
-    <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map(todo => <li
-          onClick={() => deleteTodo(todo.id)}
-          key={todo.id}>
-          {todo.content}
-        </li>)}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
-      </div>
-      <button onClick={signOut}>Sign out</button>
+    <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1>📁 Amplify S3 Storage Browser</h1>
+        <button onClick={signOut} style={{ padding: "0.5rem 1rem", cursor: "pointer" }}>Sign out</button>
+      </header>
+
+      <section style={{ marginTop: "2rem" }}>
+        <p>Upload, download, create folders, and manage your files directly in your Amplify S3 bucket.</p>
+        <div style={{ marginTop: "1.5rem", border: "1px solid #ccc", borderRadius: "8px", padding: "1rem" }}>
+          <StorageBrowser />
+        </div>
+      </section>
     </main>
   );
 }
