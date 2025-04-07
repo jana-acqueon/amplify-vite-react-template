@@ -1,6 +1,6 @@
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { StorageBrowser } from '@aws-amplify/ui-react-storage';
-// import '@aws-amplify/ui-react/styles.css';
+import '@aws-amplify/ui-react/styles.css';
 
 function App() {
   const { signOut } = useAuthenticator();
