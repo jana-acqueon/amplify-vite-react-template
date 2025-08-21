@@ -1,11 +1,13 @@
-import { defineBackend } from "@aws-amplify/backend";
+import { defineBackend } from '@aws-amplify/backend';
+import { auth } from './auth/resource';
+import { storage } from './storage/resource';
 import { Effect, Policy, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
-import { auth } from "./auth/resource";
 
 const backend = defineBackend({
-  auth
+  auth,
 });
+
 
 const customBucketStack = backend.createStack("custom-bucket-stack");
 
@@ -25,8 +27,9 @@ backend.addOutput({
         bucket_name: customBucket.bucketName,
         name: customBucket.bucketName,
         paths: {
-          "public/*": {
+          "": {
             guest: ["get", "list"],
+
             authenticated: ["get", "list", "write", "delete"],
           },
         },
@@ -36,6 +39,7 @@ backend.addOutput({
 });
 
 // ... Unauthenticated/guest user policies and role attachments go here ...
+
 /*
   Define an inline policy to attach to Amplify's auth role
   This policy defines how authenticated users can access your existing bucket
@@ -49,7 +53,7 @@ const authPolicy = new Policy(backend.stack, "customBucketAuthPolicy", {
         "s3:PutObject",
         "s3:DeleteObject"
       ],
-      resources: [`${customBucket.bucketArn}/public/*`,],
+      resources: [`${customBucket.bucketArn}/*`,],
     }),
     new PolicyStatement({
       effect: Effect.ALLOW,
@@ -58,14 +62,9 @@ const authPolicy = new Policy(backend.stack, "customBucketAuthPolicy", {
         `${customBucket.bucketArn}`,
         `${customBucket.bucketArn}/*`
       ],
-      conditions: {
-        StringLike: {
-          "s3:prefix": ["public/*", "public/"],
-        },
-      },
     }),
   ],
 });
 
 // Add the policies to the authenticated user role
-backend.auth.resources.authenticatedUserIamRole.attachInlinePolicy(authPolicy)
+backend.auth.resources.authenticatedUserIamRole.attachInlinePolicy(authPolicy);
