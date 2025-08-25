@@ -13,7 +13,7 @@ const customBucketStack = backend.createStack("custom-bucket-stack");
 
 // Import existing bucket
 const customBucket = Bucket.fromBucketAttributes(customBucketStack, "MyCustomBucket", {
-  bucketName: process.env.bucketName,
+  bucketArn: process.env.bucketARN,
   region: process.env.bucketRegion
 });
 
