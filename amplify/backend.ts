@@ -13,8 +13,8 @@ const customBucketStack = backend.createStack("custom-bucket-stack");
 
 // Import existing bucket
 const customBucket = Bucket.fromBucketAttributes(customBucketStack, "MyCustomBucket", {
-  bucketArn: "arn:aws:s3:::testamplifybucket1",
-  region: "us-east-1"
+  bucketName: process.env.bucketName,
+  region: process.env.bucketRegion
 });
 
 backend.addOutput({
@@ -29,7 +29,6 @@ backend.addOutput({
         paths: {
           "": {
             guest: ["get", "list"],
-
             authenticated: ["get", "list", "write", "delete"],
           },
         },

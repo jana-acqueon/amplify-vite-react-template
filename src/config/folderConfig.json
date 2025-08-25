@@ -1,0 +1,23 @@
+{
+  "folders": [
+    {
+      "path": "reports/*",
+      "access": [
+        { "role": "authenticated", "actions": ["read", "write"] }
+      ]
+    },
+    {
+      "path": "projects/*",
+      "access": [
+        { "role": "authenticated", "actions": ["read"] },
+        { "role": "guest", "actions": ["read"] }
+      ]
+    },
+    {
+      "path": "user-private/{entity_id}/*",
+      "access": [
+        { "role": "entity:identity", "actions": ["read", "write", "delete"] }
+      ]
+    }
+  ]
+}
